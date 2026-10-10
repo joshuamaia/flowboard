@@ -1,0 +1,42 @@
+<ol class="events" [class.compact]="compact()">
+  @if (!compact()) {
+    <li class="row head" aria-hidden="true">
+      <span>Horário</span>
+      <span>Tarefa</span>
+      <span>Evento</span>
+      <span>Transição</span>
+      <span>Descrição</span>
+      <span class="attempt">Tent.</span>
+    </li>
+  }
+  @for (event of events(); track event.id) {
+    <li class="row" [attr.data-type]="event.type">
+      <time class="time mono" [attr.datetime]="event.timestamp">
+        {{ event.timestamp | date: 'HH:mm:ss' }}
+      </time>
+      <span class="task mono">{{ event.taskId }}</span>
+      <span class="type">{{ typeLabels[event.type] }}</span>
+      @if (!compact()) {
+        <span class="transition">
+          @if (event.fromStatus) {
+            <app-task-status-badge [status]="event.fromStatus" />
+          } @else {
+            <span class="none">—</span>
+          }
+          <span class="arrow" aria-label="para">→</span>
+          @if (event.toStatus) {
+            <app-task-status-badge [status]="event.toStatus" />
+          } @else {
+            <span class="none">—</span>
+          }
+        </span>
+      }
+      <span class="message">{{ event.message }}</span>
+      @if (!compact()) {
+        <span class="attempt mono" [attr.aria-label]="'Tentativa ' + event.attempt">
+          #{{ event.attempt }}
+        </span>
+      }
+    </li>
+  }
+</ol>

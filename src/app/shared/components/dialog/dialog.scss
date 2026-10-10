@@ -1,0 +1,48 @@
+dialog {
+  width: min(560px, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-lg);
+  background: var(--fb-surface);
+  color: var(--fb-text);
+  box-shadow: var(--fb-shadow);
+
+  &::backdrop {
+    background: var(--fb-backdrop);
+    backdrop-filter: blur(2px);
+  }
+
+  &[open] {
+    animation: fb-dialog-in 180ms var(--fb-ease);
+  }
+}
+
+.panel {
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+
+  h2 {
+    font-size: 1.0625rem;
+  }
+}
+
+@media (max-width: 639.98px) {
+  .panel {
+    padding: 1rem;
+  }
+}
+
+@keyframes fb-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+}

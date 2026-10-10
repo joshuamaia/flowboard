@@ -1,0 +1,18 @@
+// Angular CDK drag & drop global states (the preview is appended to <body>).
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: var(--fb-radius);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 35%);
+  list-style: none;
+  transform: rotate(1.5deg);
+  cursor: grabbing;
+}
+
+.cdk-drag-animating {
+  transition: transform 200ms var(--fb-ease);
+}
+
+.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder) {
+  transition: transform 200ms var(--fb-ease);
+}

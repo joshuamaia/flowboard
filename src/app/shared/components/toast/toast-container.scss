@@ -1,0 +1,57 @@
+:host {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 200;
+  pointer-events: none;
+}
+
+ol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toast {
+  --accent: var(--fb-primary);
+
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(360px, calc(100vw - 2rem));
+  padding: 0.5rem 0.5rem 0.5rem 0.875rem;
+  border: 1px solid var(--fb-border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--fb-radius);
+  background: var(--fb-surface);
+  box-shadow: var(--fb-shadow);
+  font-size: 0.875rem;
+  pointer-events: auto;
+  animation: fb-toast-in 200ms var(--fb-ease);
+
+  > app-icon {
+    color: var(--accent);
+  }
+
+  &[data-kind='success'] {
+    --accent: var(--fb-success);
+  }
+
+  &[data-kind='error'] {
+    --accent: var(--fb-danger);
+  }
+}
+
+.message {
+  flex: 1;
+}
+
+@keyframes fb-toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

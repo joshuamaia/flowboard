@@ -1,0 +1,104 @@
+@let t = task();
+
+<header>
+  <span class="id mono">{{ t.id }}</span>
+  <app-task-priority-badge [priority]="t.priority" />
+</header>
+
+<h3 class="title">{{ t.title }}</h3>
+@if (t.description) {
+  <p class="description">{{ t.description }}</p>
+}
+
+<div class="state">
+  <app-task-status-badge [status]="t.status" />
+  @if (waitingForWorker()) {
+    <span class="caption">aguardando worker livre</span>
+  } @else if (paused() && progress()) {
+    <span class="caption">pausada</span>
+  }
+</div>
+
+@if (progress(); as p) {
+  @for (segment of [p.key]; track segment) {
+    <div class="progress" [attr.data-phase]="p.phase" aria-hidden="true">
+      <span
+        class="bar"
+        [class.running]="p.running"
+        [style.--from]="p.from"
+        [style.--duration]="p.durationMs + 'ms'"
+      ></span>
+    </div>
+  }
+}
+
+<dl class="meta">
+  <div title="Data de criação">
+    <dt><app-icon name="clock" [size]="14" /><span class="sr-only">Criada em</span></dt>
+    <dd>
+      <time [attr.datetime]="t.createdAt">{{ t.createdAt | date: 'dd/MM HH:mm:ss' }}</time>
+    </dd>
+  </div>
+  <div title="Tentativas">
+    <dt><app-icon name="repeat" [size]="14" /><span class="sr-only">Tentativas</span></dt>
+    <dd class="mono">{{ t.attempts }}</dd>
+  </div>
+  <div [title]="processingTime() === undefined ? 'Duração simulada' : 'Tempo de processamento'">
+    <dt>
+      <app-icon name="activity" [size]="14" />
+      <span class="sr-only">
+        {{ processingTime() === undefined ? 'Duração simulada' : 'Tempo de processamento' }}
+      </span>
+    </dt>
+    <dd class="mono">{{ processingTime() ?? t.durationMs | duration }}</dd>
+  </div>
+</dl>
+
+<footer class="actions">
+  <a
+    class="btn btn-ghost btn-sm btn-icon"
+    [routerLink]="['/history']"
+    [queryParams]="{ task: t.id }"
+    [attr.aria-label]="'Ver histórico de ' + t.id"
+    title="Ver histórico"
+  >
+    <app-icon name="history" [size]="14" />
+  </a>
+  @for (item of actions(); track item) {
+    @switch (item) {
+      @case ('REQUEUE') {
+        <button
+          type="button"
+          class="btn btn-ghost btn-sm"
+          [attr.aria-label]="'Reenviar ' + t.id + ' para a fila'"
+          (click)="action.emit('REQUEUE')"
+        >
+          <app-icon name="repeat" [size]="14" />
+          Reenviar
+        </button>
+      }
+      @case ('INTERRUPT') {
+        <button
+          type="button"
+          class="btn btn-ghost btn-sm"
+          [attr.aria-label]="'Interromper ' + t.id"
+          (click)="action.emit('INTERRUPT')"
+        >
+          <app-icon name="stop" [size]="14" />
+          Interromper
+        </button>
+      }
+      @case ('DELETE') {
+        <button
+          type="button"
+          class="btn btn-ghost btn-sm btn-icon delete"
+          [attr.aria-label]="'Excluir ' + t.id"
+          title="Excluir"
+          (click)="action.emit('DELETE')"
+        >
+          <app-icon name="trash" [size]="14" />
+        </button>
+      }
+    }
+  }
+</footer>

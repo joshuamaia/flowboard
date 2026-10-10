@@ -1,0 +1,52 @@
+<section class="metrics" aria-label="Indicadores">
+  @for (card of cards(); track card.id) {
+    <app-metric-card
+      [label]="card.label"
+      [value]="card.value"
+      [icon]="card.icon"
+      [tone]="card.tone"
+      [hint]="card.hint"
+      [tooltip]="card.tooltip"
+    />
+  }
+</section>
+
+@if (hasTasks()) {
+  <section class="analytics" aria-labelledby="analytics-heading">
+    <h2 id="analytics-heading" class="sr-only">Gráficos</h2>
+    @defer (on viewport; prefetch on idle) {
+      <app-dashboard-charts />
+    } @placeholder {
+      <div class="charts-skeleton" aria-busy="true" aria-label="Carregando gráficos">
+        @for (slot of chartSlots; track slot) {
+          <div class="card skeleton-card" [class.wide]="slot === 3">
+            <span class="skeleton line short"></span>
+            <span class="skeleton plot"></span>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  <section class="card activity" aria-labelledby="activity-heading">
+    <header>
+      <h2 id="activity-heading">Atividade recente</h2>
+      <a class="btn btn-ghost btn-sm" routerLink="/history">Ver histórico completo</a>
+    </header>
+    <app-event-list [events]="recentEvents()" [compact]="true" />
+  </section>
+} @else {
+  <section class="card">
+    <app-empty-state
+      icon="dashboard"
+      heading="Nenhuma tarefa ainda"
+      message="Crie tarefas e inicie a simulação para acompanhar os indicadores em tempo real."
+    >
+      <button type="button" class="btn btn-primary" (click)="openDialog()">
+        <app-icon name="plus" />
+        Criar primeira tarefa
+      </button>
+      <app-demo-scenario-button />
+    </app-empty-state>
+  </section>
+}

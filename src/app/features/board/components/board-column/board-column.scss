@@ -1,0 +1,139 @@
+:host {
+  --accent: var(--fb-status-pending);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius-lg);
+  background: color-mix(in srgb, var(--fb-surface) 55%, var(--fb-bg));
+  transition:
+    border-color var(--fb-duration) var(--fb-ease),
+    background-color var(--fb-duration) var(--fb-ease);
+}
+
+:host([data-column='processing']) {
+  --accent: var(--fb-status-processing);
+}
+
+:host([data-column='completed']) {
+  --accent: var(--fb-status-completed);
+}
+
+:host([data-column='failed']) {
+  --accent: var(--fb-status-failed);
+}
+
+// A drag that may legally land here highlights the column.
+:host:has(.cdk-drop-list-receiving) {
+  border-color: var(--accent);
+  border-style: dashed;
+  background: color-mix(in srgb, var(--accent) 8%, var(--fb-bg));
+
+  .drop-hint {
+    opacity: 1;
+  }
+}
+
+:host:has(.cdk-drop-list-dragging) {
+  border-color: var(--accent);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1rem 0.5rem;
+
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.count {
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  background: var(--fb-surface-2);
+  color: var(--fb-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.375rem;
+}
+
+.caption {
+  margin-left: auto;
+  color: var(--fb-text-muted);
+  font-size: 0.75rem;
+}
+
+.list {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.625rem;
+  min-height: 8rem;
+  max-height: calc(100dvh - 15rem);
+  margin: 0;
+  padding: 0.5rem 0.75rem 0.75rem;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.draggable {
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
+}
+
+.placeholder {
+  min-height: 6rem;
+  border: 1px dashed var(--fb-border-strong);
+  border-radius: var(--fb-radius);
+  opacity: 0.6;
+}
+
+.empty {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  padding: 1.5rem 1rem;
+  border: 1px dashed var(--fb-border);
+  border-radius: var(--fb-radius);
+  color: var(--fb-text-muted);
+  font-size: 0.8125rem;
+  text-align: center;
+}
+
+.drop-hint {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 50%;
+  padding: 0.25rem 0.625rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%);
+  transition: opacity var(--fb-duration) var(--fb-ease);
+}
+
+@media (max-width: 1023.98px) {
+  .list {
+    max-height: none;
+  }
+}

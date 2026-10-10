@@ -1,0 +1,70 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.required {
+  margin-left: 0.125rem;
+  color: var(--fb-danger);
+}
+
+.message {
+  font-size: 0.75rem;
+}
+
+.hint {
+  color: var(--fb-text-muted);
+}
+
+.error {
+  color: var(--fb-danger);
+}
+
+// Styles for native text controls projected into the field.
+:host ::ng-deep :is(input:not([type='range']):not([type='radio']), textarea, select) {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--fb-border);
+  border-radius: var(--fb-radius);
+  background: var(--fb-bg);
+  transition:
+    border-color var(--fb-duration) var(--fb-ease),
+    box-shadow var(--fb-duration) var(--fb-ease);
+
+  &::placeholder {
+    color: var(--fb-text-muted);
+    opacity: 0.8;
+  }
+
+  &:hover {
+    border-color: var(--fb-border-strong);
+  }
+
+  &:focus-visible {
+    outline: none;
+    border-color: var(--fb-primary);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--fb-primary) 25%, transparent);
+  }
+}
+
+:host ::ng-deep textarea {
+  min-height: 4.5rem;
+  resize: vertical;
+}
+
+:host(.invalid) ::ng-deep :is(input, textarea, select) {
+  border-color: var(--fb-danger);
+}

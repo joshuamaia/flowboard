@@ -1,0 +1,79 @@
+@if (totalEvents() === 0) {
+  <section class="card">
+    <app-empty-state
+      icon="history"
+      heading="Nenhum evento registrado"
+      message="Cada criação, início, falha, retry e conclusão de tarefa será registrada aqui."
+    />
+  </section>
+} @else {
+  <form
+    class="filters card"
+    role="search"
+    aria-label="Filtrar eventos"
+    (submit)="$event.preventDefault()"
+  >
+    <app-icon name="filter" [size]="16" class="filter-icon" />
+
+    <label>
+      <span>Tarefa</span>
+      <select [value]="taskFilter()" (change)="onTaskChange($event)">
+        <option value="">Todas</option>
+        @for (id of taskIds(); track id) {
+          <option [value]="id" [selected]="id === taskFilter()">{{ id }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Tipo</span>
+      <select [value]="typeFilter()" (change)="onTypeChange($event)">
+        <option value="">Todos</option>
+        @for (type of types; track type) {
+          <option [value]="type" [selected]="type === typeFilter()">{{ typeLabels[type] }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      <span>Período</span>
+      <select [value]="periodFilter()" (change)="onPeriodChange($event)">
+        @for (period of periods; track period.id) {
+          <option [value]="period.id" [selected]="period.id === periodFilter()">
+            {{ period.label }}
+          </option>
+        }
+      </select>
+    </label>
+
+    <p class="summary">
+      <strong class="mono">{{ filtered().length }}</strong> de
+      <span class="mono">{{ totalEvents() }}</span> eventos
+    </p>
+
+    @if (hasFilters()) {
+      <button type="button" class="btn btn-ghost btn-sm" (click)="clearFilters()">
+        Limpar filtros
+      </button>
+    }
+  </form>
+
+  <section class="card list" aria-label="Eventos">
+    @if (filtered().length === 0) {
+      <app-empty-state
+        icon="filter"
+        heading="Nenhum evento encontrado"
+        message="Ajuste os filtros para ver outros eventos."
+      />
+    } @else {
+      <app-event-list [events]="visible()" />
+      @if (visible().length < filtered().length) {
+        <div class="more">
+          <button type="button" class="btn btn-secondary" (click)="showMore()">
+            Carregar mais ({{ filtered().length - visible().length }} restantes)
+          </button>
+        </div>
+      }
+    }
+  </section>
+}

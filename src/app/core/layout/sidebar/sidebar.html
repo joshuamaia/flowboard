@@ -1,0 +1,35 @@
+<div class="brand">
+  <span class="logo"><app-icon name="activity" [size]="20" [strokeWidth]="2.25" /></span>
+  <span class="brand-text">
+    <span class="brand-name">FlowBoard</span>
+    <span class="brand-tag">Async task simulator</span>
+  </span>
+  <button
+    type="button"
+    class="btn btn-ghost btn-icon close"
+    aria-label="Fechar menu"
+    (click)="closed.emit()"
+  >
+    <app-icon name="close" />
+  </button>
+</div>
+
+<nav aria-label="Navegação principal">
+  <ul>
+    @for (item of items; track item.path) {
+      <li>
+        <a
+          class="nav-link"
+          [routerLink]="item.path"
+          routerLinkActive="active"
+          ariaCurrentWhenActive="page"
+        >
+          <app-icon [name]="item.icon" />
+          <span>{{ item.label }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</nav>
+
+<p class="footnote">Simulação educacional executada inteiramente no navegador.</p>

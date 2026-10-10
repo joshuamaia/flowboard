@@ -1,0 +1,194 @@
+<form class="settings" [formGroup]="form" novalidate (submit)="$event.preventDefault()">
+  <section class="card section" aria-labelledby="sim-heading">
+    <header>
+      <h2 id="sim-heading">Simulação</h2>
+      <p>Alterações são aplicadas imediatamente, inclusive com a simulação em andamento.</p>
+    </header>
+
+    <div class="grid">
+      <app-form-field
+        label="Concorrência máxima"
+        fieldId="set-concurrency"
+        hint="Quantas tarefas podem ser processadas ao mesmo tempo."
+      >
+        <app-range-input
+          inputId="set-concurrency"
+          formControlName="maxConcurrency"
+          describedBy="set-concurrency-hint"
+          [min]="limits.maxConcurrency.min"
+          [max]="limits.maxConcurrency.max"
+          [step]="limits.maxConcurrency.step"
+          [format]="formatWorkers"
+        />
+      </app-form-field>
+
+      <app-segmented-control
+        formControlName="speed"
+        name="set-speed"
+        legend="Velocidade da simulação"
+        hint="Multiplica a passagem do tempo simulado."
+        [options]="speedOptions"
+      />
+    </div>
+  </section>
+
+  <section class="card section" aria-labelledby="retry-heading">
+    <header>
+      <h2 id="retry-heading">Retry automático</h2>
+      <p>Como tarefas com falha são reprocessadas antes de ficarem definitivamente em Falhas.</p>
+    </header>
+
+    <div class="grid">
+      <app-form-field
+        label="Quantidade máxima de retries"
+        fieldId="set-retries"
+        hint="0 desativa o retry automático."
+      >
+        <app-range-input
+          inputId="set-retries"
+          formControlName="maxRetries"
+          describedBy="set-retries-hint"
+          [min]="limits.maxRetries.min"
+          [max]="limits.maxRetries.max"
+          [step]="limits.maxRetries.step"
+          [format]="formatCount"
+        />
+      </app-form-field>
+
+      <app-segmented-control
+        formControlName="retryStrategy"
+        name="set-strategy"
+        legend="Estratégia de retry"
+        [options]="strategyOptions"
+      />
+
+      <app-form-field
+        label="Intervalo inicial"
+        fieldId="set-initial-delay"
+        hint="Espera antes da primeira nova tentativa."
+      >
+        <app-range-input
+          inputId="set-initial-delay"
+          formControlName="initialRetryDelayMs"
+          describedBy="set-initial-delay-hint"
+          [min]="limits.initialRetryDelayMs.min"
+          [max]="limits.initialRetryDelayMs.max"
+          [step]="limits.initialRetryDelayMs.step"
+          [format]="formatDuration"
+        />
+      </app-form-field>
+
+      <app-form-field
+        label="Limite máximo de backoff"
+        fieldId="set-max-delay"
+        hint="Nenhuma espera ultrapassa este valor."
+        [error]="delayError()"
+      >
+        <app-range-input
+          inputId="set-max-delay"
+          formControlName="maxRetryDelayMs"
+          describedBy="set-max-delay-error set-max-delay-hint"
+          [min]="limits.maxRetryDelayMs.min"
+          [max]="limits.maxRetryDelayMs.max"
+          [step]="limits.maxRetryDelayMs.step"
+          [format]="formatDuration"
+        />
+      </app-form-field>
+    </div>
+
+    <div class="preview" aria-live="polite">
+      <h3>Prévia</h3>
+      @if (backoffPreview().length === 0) {
+        <p class="muted">Sem retry: a tarefa vai direto para Falhas na primeira falha.</p>
+      } @else {
+        <ol>
+          <li><span class="mono">Tentativa 1</span> executa imediatamente</li>
+          @for (step of backoffPreview(); track step.attempt) {
+            <li>
+              <span class="mono">Tentativa {{ step.attempt }}</span> aguarda
+              <strong class="mono">{{ step.delay }}</strong>
+            </li>
+          }
+        </ol>
+      }
+    </div>
+  </section>
+
+  <section class="card section" aria-labelledby="theme-heading">
+    <header>
+      <h2 id="theme-heading">Aparência</h2>
+    </header>
+    <app-segmented-control
+      class="narrow"
+      name="set-theme"
+      legend="Tema"
+      [formControl]="themeControl"
+      [options]="themeOptions"
+    />
+  </section>
+
+  <section class="card section" aria-labelledby="demo-heading">
+    <header>
+      <h2 id="demo-heading">Modo demonstração</h2>
+      <p>
+        Gera tarefas com prioridades, durações e probabilidades de falha variadas. Com uma seed
+        fixa, as tarefas e os sorteios de falha se repetem, ideal para gravar vídeos.
+      </p>
+    </header>
+
+    <div class="demo">
+      <app-form-field
+        label="Seed"
+        fieldId="set-seed"
+        hint="Número inteiro entre 0 e 999999."
+        [error]="demoSeed() === null ? 'Informe um número inteiro entre 0 e 999999.' : null"
+      >
+        <input
+          id="set-seed"
+          type="number"
+          inputmode="numeric"
+          min="0"
+          max="999999"
+          step="1"
+          [formControl]="seedControl"
+          [attr.aria-invalid]="demoSeed() === null"
+          aria-describedby="set-seed-error set-seed-hint"
+        />
+      </app-form-field>
+      <div class="demo-actions">
+        @let seed = demoSeed();
+        @if (seed !== null) {
+          <app-demo-scenario-button variant="btn-primary" [seed]="seed" />
+        }
+        <app-demo-scenario-button customLabel="Cenário aleatório" />
+      </div>
+    </div>
+  </section>
+
+  <section class="card section danger-zone" aria-labelledby="data-heading">
+    <header>
+      <h2 id="data-heading">Dados</h2>
+      <p>
+        @if (storageAvailable) {
+          Salvos automaticamente no navegador:
+          <strong class="mono">{{ taskCount() }}</strong> tarefa(s) e
+          <strong class="mono">{{ eventCount() }}</strong> evento(s).
+        } @else {
+          O armazenamento local não está disponível neste navegador; os dados não serão salvos.
+        }
+      </p>
+    </header>
+
+    <div class="data-actions">
+      <button type="button" class="btn btn-secondary" (click)="resetSettings()">
+        Restaurar configurações padrão
+      </button>
+      <button type="button" class="btn btn-secondary danger" (click)="clearTasks()">
+        Limpar tarefas e histórico
+      </button>
+      <button type="button" class="btn btn-danger" (click)="eraseEverything()">
+        Apagar todos os dados
+      </button>
+    </div>
+  </section>
+</form>

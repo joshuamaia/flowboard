@@ -1,0 +1,84 @@
+<form [formGroup]="form" novalidate (ngSubmit)="submit()">
+  <app-form-field
+    label="Título"
+    fieldId="task-title"
+    [required]="true"
+    [error]="errorFor('title')"
+    [hint]="'Entre ' + limits.titleMinLength + ' e ' + limits.titleMaxLength + ' caracteres.'"
+  >
+    <input
+      #titleInput
+      id="task-title"
+      type="text"
+      formControlName="title"
+      autocomplete="off"
+      placeholder="Ex.: Gerar relatório mensal"
+      [attr.maxlength]="limits.titleMaxLength"
+      [attr.aria-invalid]="!!errorFor('title')"
+      aria-describedby="task-title-error task-title-hint"
+    />
+  </app-form-field>
+
+  <app-form-field
+    label="Descrição"
+    fieldId="task-description"
+    [error]="errorFor('description')"
+    hint="Opcional."
+  >
+    <span fieldAddon class="counter mono">
+      {{ form.controls.description.value.length }}/{{ limits.descriptionMaxLength }}
+    </span>
+    <textarea
+      id="task-description"
+      formControlName="description"
+      rows="3"
+      placeholder="Detalhes sobre o que a tarefa simula"
+      [attr.maxlength]="limits.descriptionMaxLength"
+      [attr.aria-invalid]="!!errorFor('description')"
+      aria-describedby="task-description-error task-description-hint"
+    ></textarea>
+  </app-form-field>
+
+  <app-priority-selector formControlName="priority" name="task-priority" />
+
+  <div class="row">
+    <app-form-field
+      label="Duração simulada"
+      fieldId="task-duration"
+      [error]="errorFor('durationMs')"
+      hint="Tempo de cada tentativa."
+    >
+      <app-range-input
+        inputId="task-duration"
+        formControlName="durationMs"
+        describedBy="task-duration-hint"
+        [min]="limits.durationMs.min"
+        [max]="limits.durationMs.max"
+        [step]="limits.durationMs.step"
+        [format]="formatDuration"
+      />
+    </app-form-field>
+
+    <app-form-field
+      label="Probabilidade de falha"
+      fieldId="task-failure"
+      [error]="errorFor('failureProbability')"
+      hint="Chance de cada tentativa falhar."
+    >
+      <app-range-input
+        inputId="task-failure"
+        formControlName="failureProbability"
+        describedBy="task-failure-hint"
+        [min]="limits.failureProbability.min"
+        [max]="limits.failureProbability.max"
+        [step]="limits.failureProbability.step"
+        [format]="formatPercent"
+      />
+    </app-form-field>
+  </div>
+
+  <footer>
+    <button type="button" class="btn btn-secondary" (click)="cancelled.emit()">Cancelar</button>
+    <button type="submit" class="btn btn-primary">Criar tarefa</button>
+  </footer>
+</form>

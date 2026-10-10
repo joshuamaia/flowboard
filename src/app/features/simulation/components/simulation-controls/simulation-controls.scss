@@ -1,0 +1,81 @@
+:host {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status {
+  --accent: var(--fb-text-muted);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.25rem;
+  padding: 0 0.75rem;
+  border: 1px solid var(--fb-border);
+  border-radius: 999px;
+  background: var(--fb-surface);
+  font-size: 0.8125rem;
+  font-weight: 500;
+
+  &[data-status='RUNNING'] {
+    --accent: var(--fb-success);
+
+    .dot {
+      animation: fb-pulse 1.6s ease-in-out infinite;
+    }
+  }
+
+  &[data-status='PAUSED'] {
+    --accent: var(--fb-warning);
+  }
+}
+
+.dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.workers {
+  padding-left: 0.5rem;
+  border-left: 1px solid var(--fb-border);
+  color: var(--fb-text-muted);
+  font-size: 0.75rem;
+}
+
+.stop:hover:not(:disabled) {
+  color: var(--fb-danger);
+}
+
+@media (max-width: 767.98px) {
+  .label {
+    display: none;
+  }
+
+  // Visually hidden but still announced (it is the live status region).
+  .status-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .btn-secondary {
+    width: 2.25rem;
+    padding: 0;
+  }
+}
+
+@keyframes fb-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 60%, transparent);
+  }
+  50% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 0%, transparent);
+  }
+}

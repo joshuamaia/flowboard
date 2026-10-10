@@ -1,0 +1,129 @@
+:host {
+  position: fixed;
+  inset: 0 auto 0 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: var(--fb-sidebar-width);
+  padding: 1rem 0.75rem;
+  background: var(--fb-surface);
+  border-right: 1px solid var(--fb-border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  height: calc(var(--fb-header-height) - 1rem);
+  padding: 0 0.5rem 1rem;
+}
+
+.logo {
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--fb-radius);
+  background: linear-gradient(135deg, var(--fb-primary), var(--fb-info));
+  color: #ffffff;
+}
+
+.brand-text {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.brand-name {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.brand-tag {
+  color: var(--fb-text-muted);
+  font-size: 0.75rem;
+}
+
+.close {
+  display: none;
+}
+
+nav {
+  flex: 1;
+}
+
+ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--fb-radius);
+  color: var(--fb-text-muted);
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background-color var(--fb-duration) var(--fb-ease),
+    color var(--fb-duration) var(--fb-ease);
+
+  &:hover {
+    background: var(--fb-surface-hover);
+    color: var(--fb-text);
+  }
+
+  &.active {
+    background: color-mix(in srgb, var(--fb-primary) 14%, transparent);
+    color: var(--fb-text);
+
+    app-icon {
+      color: var(--fb-primary);
+    }
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0.5rem auto 0.5rem -0.75rem;
+      width: 3px;
+      border-radius: 0 3px 3px 0;
+      background: var(--fb-primary);
+    }
+  }
+}
+
+.footnote {
+  padding: 0.75rem;
+  color: var(--fb-text-muted);
+  font-size: 0.75rem;
+}
+
+// Below desktop the sidebar becomes an off-canvas drawer.
+@media (max-width: 1023.98px) {
+  :host {
+    visibility: hidden;
+    transform: translateX(-100%);
+    box-shadow: var(--fb-shadow);
+    transition:
+      transform 220ms var(--fb-ease),
+      visibility 0s linear 220ms;
+  }
+
+  :host(.open) {
+    visibility: visible;
+    transform: translateX(0);
+    transition: transform 220ms var(--fb-ease);
+  }
+
+  .close {
+    display: inline-flex;
+  }
+}

@@ -1,0 +1,46 @@
+@let col = column();
+
+<header>
+  <h2 [id]="'column-' + col.id">
+    <span class="dot" aria-hidden="true"></span>
+    {{ col.title }}
+  </h2>
+  <span class="count mono" [attr.aria-label]="items().length + ' tarefas'">{{
+    items().length
+  }}</span>
+  @if (caption()) {
+    <span class="caption">{{ caption() }}</span>
+  }
+</header>
+
+<ul
+  class="list"
+  cdkDropList
+  cdkDropListSortingDisabled
+  [cdkDropListData]="col.id"
+  [cdkDropListEnterPredicate]="canEnter"
+  [attr.aria-labelledby]="'column-' + col.id"
+  (cdkDropListDropped)="onDrop($event)"
+>
+  @for (item of items(); track item.task.id) {
+    <li
+      cdkDrag
+      [cdkDragData]="item.task"
+      [cdkDragDisabled]="!canDrag(item.task)"
+      [cdkDragStartDelay]="{ touch: 250, mouse: 0 }"
+      [class.draggable]="canDrag(item.task)"
+    >
+      <app-task-card
+        [task]="item.task"
+        [execution]="item.execution"
+        [paused]="paused()"
+        (action)="cardAction.emit({ taskId: item.task.id, action: $event })"
+      />
+      <div class="placeholder" *cdkDragPlaceholder></div>
+    </li>
+  } @empty {
+    <li class="empty">{{ col.emptyMessage }}</li>
+  }
+</ul>
+
+<p class="drop-hint" aria-hidden="true">Solte aqui</p>

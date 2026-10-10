@@ -1,0 +1,53 @@
+<header>
+  <div class="heading">
+    <h3>{{ heading() }}</h3>
+    @if (description()) {
+      <p>{{ description() }}</p>
+    }
+  </div>
+  <button
+    type="button"
+    class="btn btn-ghost btn-sm"
+    [attr.aria-pressed]="showTable()"
+    [attr.aria-label]="(showTable() ? 'Mostrar gráfico: ' : 'Mostrar tabela: ') + heading()"
+    (click)="toggle()"
+  >
+    {{ showTable() ? 'Gráfico' : 'Tabela' }}
+  </button>
+</header>
+
+<div class="body" [hidden]="showTable()">
+  <ng-content />
+</div>
+
+@if (showTable()) {
+  <div class="table-wrap">
+    <table>
+      <caption class="sr-only">
+        {{
+          heading()
+        }}
+      </caption>
+      <thead>
+        <tr>
+          @for (header of table().headers; track $index) {
+            <th scope="col">{{ header }}</th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of table().rows; track $index) {
+          <tr>
+            @for (cell of row; track $index) {
+              <td [class.mono]="$index > 0">{{ cell }}</td>
+            }
+          </tr>
+        } @empty {
+          <tr>
+            <td [attr.colspan]="table().headers.length" class="empty">Sem dados no período.</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+}

@@ -1,0 +1,45 @@
+<div
+  class="status"
+  [attr.data-status]="status()"
+  [title]="'Workers ocupados: ' + activeCount() + ' de ' + capacity()"
+>
+  <span class="dot" aria-hidden="true"></span>
+  <span class="status-label" role="status">{{ statusLabel() }}</span>
+  <span class="workers mono">
+    <span class="sr-only">Workers ocupados:</span>
+    {{ activeCount() }}/{{ capacity() }}
+  </span>
+</div>
+
+@switch (status()) {
+  @case ('IDLE') {
+    <button type="button" class="btn btn-secondary" (click)="start()">
+      <app-icon name="play" [size]="16" />
+      <span class="label">Iniciar</span>
+    </button>
+  }
+  @case ('RUNNING') {
+    <button type="button" class="btn btn-secondary" (click)="pause()">
+      <app-icon name="pause" [size]="16" />
+      <span class="label">Pausar</span>
+    </button>
+  }
+  @case ('PAUSED') {
+    <button type="button" class="btn btn-secondary" (click)="resume()">
+      <app-icon name="play" [size]="16" />
+      <span class="label">Retomar</span>
+    </button>
+  }
+}
+
+@if (status() !== 'IDLE') {
+  <button
+    type="button"
+    class="btn btn-ghost btn-icon stop"
+    aria-label="Interromper simulação"
+    title="Interromper simulação"
+    (click)="stop()"
+  >
+    <app-icon name="stop" [size]="16" />
+  </button>
+}

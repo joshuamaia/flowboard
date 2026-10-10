@@ -1,0 +1,37 @@
+@if (hasTasks()) {
+  <div class="toolbar">
+    <p class="hint">
+      <app-icon name="info" [size]="14" />
+      Arraste uma tarefa com falha ou em processamento para <strong>Pendentes</strong> para
+      reenviá-la ou interrompê-la. As demais transições são controladas pelo motor.
+    </p>
+    <app-demo-scenario-button />
+  </div>
+
+  <div class="board" cdkDropListGroup>
+    @for (column of columns(); track column.def.id) {
+      <app-board-column
+        [column]="column.def"
+        [items]="column.items"
+        [paused]="paused()"
+        [caption]="column.def.id === 'processing' ? workersCaption() : undefined"
+        (dropped)="onDropped($event)"
+        (cardAction)="onCardAction($event)"
+      />
+    }
+  </div>
+} @else {
+  <section class="card">
+    <app-empty-state
+      icon="board"
+      heading="Quadro vazio"
+      message="Crie uma tarefa para colocá-la na fila. Ela entra como Pendente e é processada quando a simulação for iniciada."
+    >
+      <button type="button" class="btn btn-primary" (click)="openDialog()">
+        <app-icon name="plus" />
+        Criar primeira tarefa
+      </button>
+      <app-demo-scenario-button />
+    </app-empty-state>
+  </section>
+}

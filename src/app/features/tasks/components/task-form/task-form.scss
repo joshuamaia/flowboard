@@ -1,0 +1,33 @@
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.125rem;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.counter {
+  color: var(--fb-text-muted);
+  font-size: 0.75rem;
+}
+
+footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+@media (max-width: 539.98px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+
+  footer .btn {
+    flex: 1;
+  }
+}

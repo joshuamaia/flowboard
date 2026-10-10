@@ -1,0 +1,65 @@
+<app-chart-card
+  heading="Tarefas por estado"
+  description="Distribuição atual da fila"
+  [table]="statusTable()"
+>
+  <app-chart
+    type="bar"
+    label="Gráfico de barras horizontais com a quantidade de tarefas em cada estado"
+    [data]="statusData()"
+    [options]="statusOptions()"
+  />
+</app-chart-card>
+
+<app-chart-card
+  heading="Sucessos × falhas"
+  description="Tentativas finalizadas a cada 10 s (últimos 5 min)"
+  [table]="outcomeTable()"
+>
+  <app-chart
+    type="bar"
+    label="Gráfico de barras agrupadas com tentativas bem-sucedidas e com falha por intervalo de 10 segundos"
+    [data]="outcomeData()"
+    [options]="outcomeOptions()"
+  />
+</app-chart-card>
+
+<app-chart-card
+  class="wide"
+  heading="Concluídas ao longo do tempo"
+  description="Total acumulado de tarefas concluídas (últimos 5 min)"
+  [table]="completedTable()"
+>
+  <app-chart
+    type="line"
+    label="Gráfico de linha com o total acumulado de tarefas concluídas"
+    [data]="completedData()"
+    [options]="completedOptions()"
+  />
+</app-chart-card>
+
+<app-chart-card
+  heading="Tempo médio de processamento"
+  description="Média da tentativa final das tarefas concluídas a cada 10 s"
+  [table]="durationTable()"
+>
+  <app-chart
+    type="line"
+    label="Gráfico de linha com o tempo médio de processamento por intervalo"
+    [data]="durationData()"
+    [options]="durationOptions()"
+  />
+</app-chart-card>
+
+<app-chart-card
+  heading="Throughput por minuto"
+  description="Tarefas concluídas em cada minuto (últimos 10 min)"
+  [table]="throughputTable()"
+>
+  <app-chart
+    type="bar"
+    label="Gráfico de barras com a quantidade de tarefas concluídas por minuto"
+    [data]="throughputData()"
+    [options]="throughputOptions()"
+  />
+</app-chart-card>

@@ -1,0 +1,79 @@
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 2.25rem;
+  padding: 0 0.875rem;
+  border: 1px solid transparent;
+  border-radius: var(--fb-radius);
+  background: transparent;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color var(--fb-duration) var(--fb-ease),
+    border-color var(--fb-duration) var(--fb-ease),
+    color var(--fb-duration) var(--fb-ease);
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  background: var(--fb-primary);
+  color: var(--fb-on-primary);
+
+  &:hover:not(:disabled) {
+    background: var(--fb-primary-hover);
+  }
+}
+
+.btn-secondary {
+  background: var(--fb-surface-2);
+  border-color: var(--fb-border);
+
+  &:hover:not(:disabled) {
+    background: var(--fb-surface-hover);
+    border-color: var(--fb-border-strong);
+  }
+}
+
+.btn-danger {
+  background: var(--fb-danger);
+  color: #ffffff;
+
+  &:hover:not(:disabled) {
+    background: color-mix(in srgb, var(--fb-danger) 85%, #000000);
+  }
+}
+
+.btn-sm {
+  height: 1.75rem;
+  padding: 0 0.5rem;
+  border-radius: var(--fb-radius-sm);
+  font-size: 0.75rem;
+
+  &.btn-icon {
+    width: 1.75rem;
+    padding: 0;
+  }
+}
+
+.btn-ghost {
+  color: var(--fb-text-muted);
+
+  &:hover:not(:disabled) {
+    background: var(--fb-surface-hover);
+    color: var(--fb-text);
+  }
+}
+
+.btn-icon {
+  width: 2.25rem;
+  padding: 0;
+}
